@@ -1,5 +1,6 @@
 package com.example.catconnect.ui.post
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,13 +12,25 @@ import com.example.catconnect.data.model.Post
 import com.example.catconnect.data.repo.FakeRepository
 import com.example.catconnect.databinding.FragmentAddPostBinding
 import com.google.android.material.snackbar.Snackbar
+import androidx.activity.result.contract.ActivityResultContracts
+import coil.load
 
 class AddPostFragment : Fragment() {
 
     private var _binding: FragmentAddPostBinding? = null
     private val binding get() = _binding!!
 
-    private var editingPostId: String? = null
+    private var pickedUri: Uri? = null          // foto yang dipilih
+    private var editingPostId: String? = null   // id post kalau mode edit
+    private var editingPost: Post? = null       // data post lama
+
+    // launcher pilih gambar dari galeri
+    private val pickImage = registerForActivityResult(
+        ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        pickedUri = uri
+        if (uri != null) binding.imgPreview.load(uri) { crossfade(true) }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,43 +46,58 @@ class AddPostFragment : Fragment() {
         // cek apakah ini mode edit
         editingPostId = arguments?.getString("postId")
         editingPostId?.let { id ->
-            FakeRepository.getPost(id)?.let { p ->
+            editingPost = FakeRepository.getPost(id)
+            editingPost?.let { p ->
                 binding.etTitle.setText(p.title)
                 binding.etBreed.setText(p.breed)
                 binding.etAge.setText(p.ageMonth.toString())
                 binding.etCaption.setText(p.caption)
-                binding.btnSave.text = getString(R.string.update, "Update") // atau langsung "Update"
+                binding.imgPreview.load(p.photoUrl)
+                binding.btnSave.text = getString(R.string.update_post) // buat string resource jika belum ada
             }
         }
 
+        // pilih foto
+        binding.btnPickImage.setOnClickListener { pickImage.launch("image/*") }
+
+        // simpan
         binding.btnSave.setOnClickListener {
             if (!validate()) return@setOnClickListener
 
-            val title = binding.etTitle.text.toString().trim()
-            val breed = binding.etBreed.text.toString().trim()
-            val age = binding.etAge.text.toString().toInt()
-            val caption = binding.etCaption.text.toString().trim()
+            val title = binding.etTitle.text!!.toString().trim()
+            val breed = binding.etBreed.text!!.toString().trim()
+            val age = binding.etAge.text!!.toString().toInt()
+            val caption = binding.etCaption.text!!.toString().trim()
 
-            val editingId = editingPostId
-            if (editingId == null) {
+            // tentukan foto: yang dipilih, kalau edit pakai lama, kalau baru pakai placeholder picsum
+            val photo = pickedUri?.toString()
+                ?: editingPost?.photoUrl
+                ?: "https://picsum.photos/seed/${System.currentTimeMillis()}/800/500"
+
+            if (editingPost == null) {
                 val newPost = Post(
-                    id = "p" + System.currentTimeMillis(),
+                    id = "p${System.currentTimeMillis()}",
                     userId = FakeRepository.currentUser.id,
                     title = title,
                     breed = breed,
                     ageMonth = age,
                     caption = caption,
-                    photoUrl = "https://picsum.photos/seed/newcat${System.currentTimeMillis()}/800/500"
+                    photoUrl = photo,
+                    likes = 0
                 )
                 FakeRepository.addPost(newPost)
-                Snackbar.make(view, "Post saved", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view, "Post ditambahkan", Snackbar.LENGTH_SHORT).show()
             } else {
-                val old = FakeRepository.getPost(editingId)!!
-                val updated = old.copy(
-                    title = title, breed = breed, ageMonth = age, caption = caption
+                FakeRepository.updatePost(
+                    editingPost!!.copy(
+                        title = title,
+                        breed = breed,
+                        ageMonth = age,
+                        caption = caption,
+                        photoUrl = photo
+                    )
                 )
-                FakeRepository.updatePost(updated)
-                Snackbar.make(view, "Post updated", Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(view, "Post diperbarui", Snackbar.LENGTH_SHORT).show()
             }
             findNavController().navigateUp()
         }
@@ -80,8 +108,9 @@ class AddPostFragment : Fragment() {
         with(binding) {
             tilTitle.error = if (etTitle.text.isNullOrBlank()) { ok = false; "Required" } else null
             tilBreed.error = if (etBreed.text.isNullOrBlank()) { ok = false; "Required" } else null
-            val age = etAge.text?.toString()?.toIntOrNull()
-            tilAge.error = if (age == null || age < 0) { ok = false; "Age >= 0" } else null
+            tilCaption.error = if (etCaption.text.isNullOrBlank()) { ok = false; "Required" } else null
+            val a = etAge.text?.toString()?.toIntOrNull()
+            tilAge.error = if (a == null || a < 0) { ok = false; "Age ≥ 0" } else null
         }
         return ok
     }

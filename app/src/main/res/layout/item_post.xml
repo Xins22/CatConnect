@@ -37,6 +37,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Breed • 12 mo • 0 likes" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLike"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Like"/>
+
         </LinearLayout>
 
     </LinearLayout>

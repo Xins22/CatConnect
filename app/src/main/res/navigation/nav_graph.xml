@@ -2,15 +2,20 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/feedFragment">
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.catconnect.ui.auth.LoginFragment"
+        android:label="Login" />
 
     <fragment android:id="@+id/feedFragment"
         android:name="com.example.catconnect.ui.feed.FeedFragment"
-        android:label="Feed" />
+        android:label="Cat Feed" />
 
     <fragment android:id="@+id/mapFragment"
         android:name="com.example.catconnect.ui.map.MapFragment"
-        android:label="Map" />
+        android:label="Nearby" />
 
     <fragment android:id="@+id/addPostFragment"
         android:name="com.example.catconnect.ui.post.AddPostFragment"

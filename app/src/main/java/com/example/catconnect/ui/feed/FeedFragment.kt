@@ -25,12 +25,24 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         val fab = view.findViewById<FloatingActionButton>(R.id.fabAdd)
 
         // pasang adapter
-        adapter = PostAdapter { post ->
-            val b = Bundle().apply { putString("postId", post.id) }
-            findNavController().navigate(R.id.postDetailFragment, b)
-        }
+        adapter = PostAdapter(
+            onClick = { post ->
+                val b = Bundle().apply { putString("postId", post.id) }
+                findNavController().navigate(R.id.postDetailFragment, b)
+            },
+            onLike = { post ->
+                val updated = post.copy(likes = post.likes + 1)
+                com.example.catconnect.data.repo.FakeRepository.updatePost(updated)
+                Snackbar.make(requireView(), "Liked", Snackbar.LENGTH_LONG)
+                    .setAction("Undo") {
+                        com.example.catconnect.data.repo.FakeRepository.updatePost(post)
+                    }
+                    .show()
+            }
+        )
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = adapter
+
 
         // observe dummy data
         vm.posts.observe(viewLifecycleOwner) { list ->

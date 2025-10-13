@@ -28,6 +28,15 @@
         android:layout_marginBottom="12dp"
         android:layout_gravity="center_horizontal"/>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="8dp"/>
+
+
     <TextView
         android:id="@+id/tvEmpty"
         android:layout_width="wrap_content"
