@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.catconnect.R
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import android.widget.TextView
 
 class FeedFragment : Fragment(R.layout.fragment_feed) {
 
@@ -34,8 +35,10 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         // observe dummy data
         vm.posts.observe(viewLifecycleOwner) { list ->
             adapter.submitList(list)
-            Snackbar.make(view, "Loaded ${list.size} posts", Snackbar.LENGTH_SHORT).show()
+            view.findViewById<TextView>(R.id.tvEmpty).visibility =
+                if (list.isEmpty()) View.VISIBLE else View.GONE
         }
+
 
         // tombol add -> ke form
         fab.setOnClickListener {

@@ -15,6 +15,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["MAPS_API_KEY"] = (project.findProperty("MAPS_API_KEY") ?: "") as String
     }
 
     buildTypes {
@@ -66,6 +67,6 @@ dependencies {
     implementation("io.coil-kt:coil:2.6.0")
 
     // (nanti) Maps & Location
-    // implementation("com.google.android.gms:play-services-maps:19.0.0")
-    // implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation("com.google.android.gms:play-services-maps:19.0.0")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }

@@ -27,6 +27,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
         val tvCaption = view.findViewById<TextView>(R.id.tvCaption)
         val btnEdit = view.findViewById<MaterialButton>(R.id.btnEdit)
         val btnDelete = view.findViewById<MaterialButton>(R.id.btnDelete)
+        val btnShare = view.findViewById<MaterialButton>(R.id.btnShare)
+
 
         val post = postId?.let { FakeRepository.getPost(it) }
         if (post == null) {
@@ -56,6 +58,14 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                 }
                 .setNegativeButton("Cancel", null)
                 .show()
+        }
+        btnShare.setOnClickListener {
+            val text = "${post.title} — ${post.breed}, ${post.ageMonth} mo\n${post.caption}"
+            val intent = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(android.content.Intent.EXTRA_TEXT, text)
+            }
+            startActivity(android.content.Intent.createChooser(intent, "Share post via"))
         }
     }
 }
