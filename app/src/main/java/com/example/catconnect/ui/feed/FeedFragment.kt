@@ -33,12 +33,9 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 findNavController().navigate(R.id.postDetailFragment, b)
             },
             onLike = { post ->
-                val updated = post.copy(likes = post.likes + 1)
-                com.example.catconnect.data.repo.FakeRepository.updatePost(updated)
-                Snackbar.make(requireView(), "Liked", Snackbar.LENGTH_LONG)
-                    .setAction("Undo") {
-                        com.example.catconnect.data.repo.FakeRepository.updatePost(post)
-                    }.show()
+                val after = com.example.catconnect.data.repo.FakeRepository.toggleLike(post)
+                val msg = if (after.likes > post.likes) "Liked" else "Unliked"
+                Snackbar.make(requireView(), msg, Snackbar.LENGTH_SHORT).show()
             }
         )
         rv.layoutManager = LinearLayoutManager(requireContext())

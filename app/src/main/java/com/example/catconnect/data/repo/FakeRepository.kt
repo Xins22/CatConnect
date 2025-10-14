@@ -7,6 +7,7 @@ import com.example.catconnect.data.model.User
 
 object FakeRepository {
     val currentUser = User("u1","Alif","https://picsum.photos/200?catface","Cat lover")
+    private val likedByCurrentUser = mutableSetOf<String>()
 
     private val _posts = MutableLiveData(
         listOf(
@@ -20,4 +21,19 @@ object FakeRepository {
     fun updatePost(p: Post) { _posts.value = _posts.value.orEmpty().map { if (it.id==p.id) p else it } }
     fun deletePost(id: String) { _posts.value = _posts.value.orEmpty().filterNot { it.id==id } }
     fun getPost(id: String) = _posts.value?.firstOrNull { it.id==id }
+
+    fun isLiked(id: String): Boolean = likedByCurrentUser.contains(id)
+
+    fun toggleLike(post: Post): Post {
+        val updated = if (likedByCurrentUser.remove(post.id)) {
+            // sebelumnya liked -> sekarang unlike (kurangi like, minimal 0)
+            post.copy(likes = kotlin.math.max(0, post.likes - 1))
+        } else {
+            // sebelumnya belum like -> sekarang like
+            likedByCurrentUser.add(post.id)
+            post.copy(likes = post.likes + 1)
+        }
+        updatePost(updated)   // ini akan memicu LiveData untuk refresh list
+        return updated
+    }
 }

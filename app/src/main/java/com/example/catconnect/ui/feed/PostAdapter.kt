@@ -39,18 +39,16 @@ class PostAdapter(
     override fun onBindViewHolder(h: VH, pos: Int) {
         val item = getItem(pos)
 
-        // load gambar (sekali saja)
-        h.img.load(item.photoUrl) {
-            crossfade(true)
-            placeholder(android.R.drawable.ic_menu_report_image)
-            error(android.R.drawable.ic_menu_report_image)
-            transformations(RoundedCornersTransformation(12f))
-        }
-
+        h.img.load(item.photoUrl) { crossfade(true) }
         h.tvTitle.text = item.title
         h.tvSubtitle.text = "${item.breed} • ${item.ageMonth} mo • ${item.likes} likes"
+
+        // tampilkan Like / Unlike
+        val liked = com.example.catconnect.data.repo.FakeRepository.isLiked(item.id)
+        h.btnLike?.text = if (liked) "Unlike" else "Like"
 
         h.itemView.setOnClickListener { onClick(item) }
         h.btnLike?.setOnClickListener { onLike?.invoke(item) }
     }
+
 }
