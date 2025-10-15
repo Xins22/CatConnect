@@ -1,15 +1,15 @@
 package com.example.catconnect
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
-import com.example.catconnect.R
-import com.example.catconnect.databinding.ActivityMainBinding
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import android.view.View
+import com.example.catconnect.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -20,19 +20,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // jadikan toolbar sebagai ActionBar
         setSupportActionBar(binding.toolbar)
 
         val navHost = supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
         val navController = navHost.navController
 
-        // top-level = tab utama bottom nav (tanpa tombol back)
         appBarConfiguration = AppBarConfiguration(
-            setOf(R.id.feedFragment, R.id.mapFragment, R.id.profileFragment)
+            setOf(R.id.feedFragment, R.id.mapFragment, R.id.profileFragment),
+            binding.drawerLayout
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         binding.bottomNav.setupWithNavController(navController)
+        binding.navView.setupWithNavController(navController)
 
         val topLevel = setOf(R.id.feedFragment, R.id.mapFragment, R.id.profileFragment)
 
@@ -43,11 +43,10 @@ class MainActivity : AppCompatActivity() {
                 binding.bottomNav.visibility = View.GONE
             }
         }
-
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        val navHost = supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
-        return navHost.navController.navigateUp() || super.onSupportNavigateUp()
+        val navController = findNavController(R.id.nav_host)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 }

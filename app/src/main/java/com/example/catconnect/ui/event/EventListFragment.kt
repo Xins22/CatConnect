@@ -10,35 +10,38 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.catconnect.R
 import com.example.catconnect.data.repo.FakeRepository
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class EventListFragment : Fragment(R.layout.fragment_event_list) {
+
     private lateinit var adapter: EventAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val rv = view.findViewById<RecyclerView>(R.id.rv)
-        val fab = view.findViewById<FloatingActionButton>(R.id.fabAdd)
 
         adapter = EventAdapter(
-            onClick = { e ->
-                val b = bundleOf("eventId" to e.id)
-                findNavController().navigate(R.id.eventDetailFragment, b)
+            onClick = { event ->
+                val bundle = bundleOf("eventId" to event.id)
+                findNavController().navigate(R.id.action_eventList_to_eventDetail, bundle)
             },
-            onLongPress = { e ->
+            onLongPress = { event ->
                 MaterialAlertDialogBuilder(requireContext())
-                    .setMessage("Hapus event?")
-                    .setPositiveButton("Hapus") { _, _ -> FakeRepository.deleteEvent(e.id) }
+                    .setTitle("Hapus Event")
+                    .setMessage("Apakah kamu yakin ingin menghapus event '${event.title}'?")
+                    .setPositiveButton("Hapus") { _, _ ->
+                        FakeRepository.deleteEvent(event.id)
+                    }
                     .setNegativeButton("Batal", null)
                     .show()
             }
         )
+
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = adapter
 
-        FakeRepository.events.observe(viewLifecycleOwner) { adapter.submitList(it) }
-
-        fab.setOnClickListener { findNavController().navigate(R.id.addEventFragment) }
+        FakeRepository.events.observe(viewLifecycleOwner) { eventList ->
+            adapter.submitList(eventList)
+        }
     }
 }

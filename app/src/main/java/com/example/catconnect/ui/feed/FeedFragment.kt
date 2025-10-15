@@ -80,7 +80,12 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                     false
                 }
             }
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean = false
+            override fun onMenuItemSelected(item: MenuItem): Boolean =
+                when (item.itemId) {
+                    R.id.action_events -> { findNavController().navigate(R.id.action_feed_to_eventList); true }
+                    else -> false
+                }
+
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
     }

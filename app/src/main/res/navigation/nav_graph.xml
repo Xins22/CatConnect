@@ -9,9 +9,14 @@
         android:name="com.example.catconnect.ui.auth.LoginFragment"
         android:label="Login" />
 
-    <fragment android:id="@+id/feedFragment"
+    <fragment
+        android:id="@+id/feedFragment"
         android:name="com.example.catconnect.ui.feed.FeedFragment"
-        android:label="Cat Feed" />
+        android:label="Cat Feed">
+        <action
+            android:id="@+id/action_feed_to_eventList"
+            app:destination="@id/eventListFragment" />
+    </fragment>
 
     <fragment android:id="@+id/mapFragment"
         android:name="com.example.catconnect.ui.map.MapFragment"
@@ -34,16 +39,17 @@
             app:argType="string" />
     </fragment>
 
+    <!-- res/navigation/nav_graph.xml -->
     <fragment
         android:id="@+id/eventListFragment"
         android:name="com.example.catconnect.ui.event.EventListFragment"
-        android:label="Event" >
+        android:label="Events">
+        <action
+            android:id="@+id/action_eventList_to_eventDetail"
+            app:destination="@id/eventDetailFragment" />
         <action
             android:id="@+id/action_eventList_to_addEvent"
             app:destination="@id/addEventFragment" />
-        <action
-            android:id="@+id/action_eventList_to_detail"
-            app:destination="@id/eventDetailFragment" />
     </fragment>
 
     <fragment
@@ -54,6 +60,10 @@
     <fragment
         android:id="@+id/eventDetailFragment"
         android:name="com.example.catconnect.ui.event.EventDetailFragment"
-        android:label="Event Detail" />
+        android:label="Event Detail">
+        <argument
+            android:name="eventId"
+            app:argType="string" />
+    </fragment>
 
 </navigation>
