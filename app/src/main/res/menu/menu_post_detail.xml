@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- hanya muncul kalau pemilik post -->
+    <item
+        android:id="@+id/action_edit"
+        android:title="Edit"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/action_delete"
+        android:title="Delete"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:showAsAction="never" />
+    <!-- umum untuk semua user -->
+    <item
+        android:id="@+id/action_share"
+        android:title="Share"
+        android:icon="@android:drawable/ic_menu_share"
+        android:showAsAction="never" />
+    <item
+        android:id="@+id/action_report"
+        android:title="Laporkan"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:showAsAction="never" />
+
+</menu>

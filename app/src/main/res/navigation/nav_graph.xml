@@ -34,4 +34,26 @@
             app:argType="string" />
     </fragment>
 
+    <fragment
+        android:id="@+id/eventListFragment"
+        android:name="com.example.catconnect.ui.event.EventListFragment"
+        android:label="Event" >
+        <action
+            android:id="@+id/action_eventList_to_addEvent"
+            app:destination="@id/addEventFragment" />
+        <action
+            android:id="@+id/action_eventList_to_detail"
+            app:destination="@id/eventDetailFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addEventFragment"
+        android:name="com.example.catconnect.ui.event.AddEventFragment"
+        android:label="Add Event" />
+
+    <fragment
+        android:id="@+id/eventDetailFragment"
+        android:name="com.example.catconnect.ui.event.EventDetailFragment"
+        android:label="Event Detail" />
+
 </navigation>

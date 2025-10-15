@@ -1,9 +1,9 @@
 package com.example.catconnect.data.model
 
-data class Comment(
+data class Message(
     val id: String,
-    val postId: String,
-    val userId: String,
+    val roomId: String,
+    val fromUserId: String,
     val text: String,
     val createdAt: Long
 )
