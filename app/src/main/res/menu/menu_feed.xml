@@ -5,13 +5,13 @@
     <item
         android:id="@+id/action_search"
         android:title="Search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/baseline_search_24"
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item
         android:id="@+id/action_events"
         android:title="Events"
-        android:icon="@android:drawable/ic_input_add"
+        android:icon="@drawable/baseline_add_24"
         app:showAsAction="ifRoom" />
 
 </menu>

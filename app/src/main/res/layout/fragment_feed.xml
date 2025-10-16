@@ -1,25 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/tvEmpty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Belum ada post. Tap + untuk tambah."
-        android:layout_gravity="center"
-        android:layout_marginTop="24dp"
-        android:visibility="gone"/>
+
+    <!-- Empty state -->
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:padding="24dp">
+
+        <ImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@android:drawable/ic_menu_report_image"
+            android:tint="?attr/colorOutline"/>
+
+        <TextView
+            android:id="@+id/tvEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Belum ada post. Tap + untuk tambah."
+            android:layout_marginTop="12dp"/>
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="80dp"
-        android:paddingTop="4dp"/>
+        android:paddingTop="8dp"
+        android:paddingBottom="@dimen/bottom_nav_space"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
@@ -27,6 +45,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="24dp"
-        android:layout_marginBottom="96dp"
+        android:layout_marginBottom="24dp"
         app:srcCompat="@android:drawable/ic_input_add"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

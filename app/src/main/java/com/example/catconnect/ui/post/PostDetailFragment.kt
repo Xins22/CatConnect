@@ -14,11 +14,10 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.catconnect.R
+import com.example.catconnect.data.model.ReportType
 import com.example.catconnect.data.repo.FakeRepository
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.example.catconnect.data.model.ReportType
-
 
 class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
 
@@ -27,19 +26,19 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        postId = requireArguments().getString("postId")
-            ?: run {
-                Snackbar.make(view, "Post not found", Snackbar.LENGTH_SHORT).show()
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-                return
-            }
+        // --- Ambil argumen aman ---
+        postId = requireArguments().getString("postId") ?: run {
+            Snackbar.make(view, "Post not found", Snackbar.LENGTH_SHORT).show()
+            // TUNDA popBack supaya tidak bentrok dengan transaksi push
+            view.post { if (isAdded) findNavController().popBackStack() }
+            return
+        }
 
-        val post = FakeRepository.getPost(postId)
-            ?: run {
-                Snackbar.make(view, "Post not found", Snackbar.LENGTH_SHORT).show()
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-                return
-            }
+        val post = FakeRepository.getPost(postId) ?: run {
+            Snackbar.make(view, "Post not found", Snackbar.LENGTH_SHORT).show()
+            view.post { if (isAdded) findNavController().popBackStack() }
+            return
+        }
 
         // ====== Bind UI dasar ======
         val img = view.findViewById<ImageView>(R.id.img)
@@ -80,7 +79,8 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                             .setPositiveButton("Delete") { _, _ ->
                                 FakeRepository.deletePost(post.id)
                                 Snackbar.make(requireView(), "Post deleted", Snackbar.LENGTH_SHORT).show()
-                                requireActivity().onBackPressedDispatcher.onBackPressed()
+                                // TUNDA popBack setelah dialog tertutup & transaksi aman
+                                view?.post { if (isAdded) findNavController().popBackStack() }
                             }
                             .setNegativeButton("Cancel", null)
                             .show()
@@ -114,14 +114,13 @@ class PostDetailFragment : Fragment(R.layout.fragment_post_detail) {
                                     reason = chosen,
                                     type = ReportType.POST
                                 )
-
                                 Snackbar.make(requireView(), "Laporan terkirim. Terima kasih 🙏", Snackbar.LENGTH_LONG).show()
                             }
                             .setNegativeButton("Batal", null)
                             .show()
                         true
                     }
-                    else -> false // <- else harus terakhir
+                    else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)

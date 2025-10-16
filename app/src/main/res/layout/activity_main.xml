@@ -7,14 +7,16 @@
     android:layout_height="match_parent">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:layout_width="match_parent" android:layout_height="match_parent">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <!-- TOP APP BAR -->
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="@string/app_name"/>
+            app:title="@string/app_name"
+            app:layout_scrollFlags="scroll|enterAlways" />
 
         <!-- NAV HOST -->
         <androidx.fragment.app.FragmentContainerView
@@ -24,7 +26,8 @@
             app:defaultNavHost="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"/>
+            android:layout_marginTop="?attr/actionBarSize"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
         <!-- BOTTOM NAV -->
         <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -32,8 +35,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            app:menu="@menu/menu_bottom_nav"/>
+            app:menu="@menu/menu_bottom_nav"
+            android:background="?attr/colorSurface"
+            app:itemActiveIndicatorStyle="@style/Widget.Material3.BottomNavigationView.ActiveIndicator"/>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/navView"
